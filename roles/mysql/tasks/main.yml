@@ -10,7 +10,7 @@
        service:  name=mysql state=started enabled=yes
 
      - name: ensure mysql listening on all IPs
-       lineinfile: dest=/etc/mysql/my.cnf regexp=^bind-address line="bind-address = 0.0.0.0"
+       lineinfile: dest=/etc/mysql/my.cnf regexp=^bind-address line="bind-address = {{ ansible_eth1.ipv4.address }}"
        notify: restart mysql
 
      - name: create demo database

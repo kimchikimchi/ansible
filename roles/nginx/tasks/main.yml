@@ -9,11 +9,6 @@
       apt: name=nginx state=present
       tags: [ 'packages' ]
 
-    - name: ensure nginx started
-      service: name=nginx state=started enabled=yes
-      tags: [ 'service' ]
-
-
     - name: configure nginx site
       template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/{{ item.key }} mode=0644
       with_dict: "{{ sites }}"
@@ -23,17 +18,24 @@
     - name: get active sites
       shell: ls -1 /etc/nginx/sites-enabled
       register: active
+      changed_when: " item.key not in active.stdout_lines "
+      with_dict: "{{ sites }}"
       tags: [ 'configure' ]
 
-    - name: de-activate site
+    # The following doesn't work. with_items doesn't properly get evaluated. 
+    - name: de-activate sites
       file: path=/etc/nginx/sites-enabled/{{ item }} state=absent
-      with_items: active.stdout_lines
+      with_items: active.stdout_lines 
       when: item not in sites
       notify: restart nginx
-      tags: [ 'service' ]
+      tags: [ 'configure' ]
 
     - name: activate nginx site
       file: src=/etc/nginx/sites-available/{{ item.key }} dest=/etc/nginx/sites-enabled/{{ item.key }} state=link
       with_dict: "{{ sites }}"
       notify: restart nginx
+      tags: [ 'configure' ]
+
+    - name: ensure nginx started
+      service: name=nginx state=started enabled=yes
       tags: [ 'service' ]

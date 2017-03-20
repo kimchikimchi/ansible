@@ -22,13 +22,18 @@
       with_dict: "{{ sites }}"
       tags: [ 'configure' ]
 
+    - debug: var=active
+
     # The following doesn't work. with_items doesn't properly get evaluated. 
     - name: de-activate sites
       file: path=/etc/nginx/sites-enabled/{{ item }} state=absent
-      with_items: active.stdout_lines 
+      #with_items: active.stdout_lines 
+      with_items: active.results
       when: item not in sites
       notify: restart nginx
       tags: [ 'configure' ]
+
+    - debug: var=active
 
     - name: activate nginx site
       file: src=/etc/nginx/sites-available/{{ item.key }} dest=/etc/nginx/sites-enabled/{{ item.key }} state=link

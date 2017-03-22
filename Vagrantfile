@@ -22,7 +22,7 @@ if [ ! -f "/home/vagrant/.ssh/id_rsa" ]; then
   ssh-keygen -t rsa -N "" -f /home/vagrant/.ssh/id_rsa
 fi
 cp /home/vagrant/.ssh/id_rsa.pub /vagrant/control.pub
-
+echo control > /etc/hostname
 cat << 'SSHEOF' > /home/vagrant/.ssh/config
 Host *
   StrictHostKeyChecking no
@@ -35,21 +35,21 @@ EOF
 
   config.vm.define "lb01" do |h|
     h.vm.network "private_network", ip: "192.168.135.101"
-    h.vm.provision :shell, inline: 'cat /vagrant/control.pub >> /home/vagrant/.ssh/authorized_keys'
+    h.vm.provision :shell, inline: 'echo lb01 > /etc/hostname;  cat /vagrant/control.pub >> /home/vagrant/.ssh/authorized_keys'
   end
 
   config.vm.define "app01" do |h|
     h.vm.network "private_network", ip: "192.168.135.111"
-    h.vm.provision :shell, inline: 'cat /vagrant/control.pub >> /home/vagrant/.ssh/authorized_keys'
+    h.vm.provision :shell, inline: 'echo app01 > /etc/hostname; cat /vagrant/control.pub >> /home/vagrant/.ssh/authorized_keys'
   end
 
   config.vm.define "app02" do |h|
     h.vm.network "private_network", ip: "192.168.135.112"
-    h.vm.provision :shell, inline: 'cat /vagrant/control.pub >> /home/vagrant/.ssh/authorized_keys'
+    h.vm.provision :shell, inline: 'echo app02 > /etc/hostname; cat /vagrant/control.pub >> /home/vagrant/.ssh/authorized_keys'
   end
 
   config.vm.define "db01" do |h|
     h.vm.network "private_network", ip: "192.168.135.121"
-    h.vm.provision :shell, inline: 'cat /vagrant/control.pub >> /home/vagrant/.ssh/authorized_keys'
+    h.vm.provision :shell, inline: 'echo db01 > /etc/hostname; cat /vagrant/control.pub >> /home/vagrant/.ssh/authorized_keys'
   end
 end

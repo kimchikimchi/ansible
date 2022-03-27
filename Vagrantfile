@@ -30,6 +30,11 @@ Host *
 SSHEOF
 
 chown -R vagrant:vagrant /home/vagrant/.ssh/
+# Add Ansible repo and install base Ansible
+apt-get install software-properties-common
+apt-add-repository ppa:ansible/ansible
+apt-get update
+apt-get install ansible --yes
 EOF
   end
 

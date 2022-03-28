@@ -10,7 +10,7 @@
        tags: [ 'packages' ]
 
      - name: ensure mysql listening on all IPs
-       lineinfile: dest=/etc/mysql/my.cnf regexp=^bind-address line="bind-address = {{ ansible_eth1.ipv4.address }}"
+       lineinfile: dest=/etc/mysql/mysql.conf.d/mysqld.cnf regexp=^bind-address line="bind-address = {{ ansible_enp0s8.ipv4.address }}"
        notify: restart mysql
        tags: [ 'configure' ]
 

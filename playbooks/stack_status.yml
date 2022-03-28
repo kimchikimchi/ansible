@@ -29,7 +29,7 @@
       changed_when: false
 
     - name: verify mysql is listening on 3306
-      wait_for: host={{ ansible_eth1.ipv4.address }} port=3306 timeout=1
+      wait_for: host={{ ansible_enp0s8.ipv4.address }} port=3306 timeout=1
 
 - hosts: control
   gather_facts: false

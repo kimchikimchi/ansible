@@ -13,7 +13,7 @@
 Vagrant.configure(2) do |config|
   config.hostmanager.enabled = true
 
-  config.vm.box = "ubuntu/trusty64"
+  config.vm.box = "ubuntu/bionic64"
 
   config.vm.define "control", primary: true do |h|
     h.vm.network "private_network", ip: "192.168.56.10"
@@ -29,12 +29,13 @@ Host *
   UserKnownHostsFile=/dev/null
 SSHEOF
 
-chown -R vagrant:vagrant /home/vagrant/.ssh/
 # Add Ansible repo and install base Ansible
 apt-get install software-properties-common
 apt-add-repository ppa:ansible/ansible
 apt-get update
 apt-get install ansible --yes
+
+chown -R vagrant:vagrant /home/vagrant/.ssh/
 EOF
   end
 
